@@ -8,8 +8,12 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-
-import { useColorScheme } from "@/src/components/useColorScheme";
+// import { useColorScheme } from "@components/useColorScheme";
+import CommDataProvider from "@/providers/CommDataProvider";
+import AuthProvider from "@/providers/AuthProvider";
+import QueryProvider from "@/providers/QueryProvider";
+import NotificationProvider from "@/providers/NotificationProvider";
+import { StatusBar } from "expo-status-bar";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,14 +53,27 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
+    <ThemeProvider value={DefaultTheme}>
+      <AuthProvider>
+        <QueryProvider>
+          <NotificationProvider>
+            <CommDataProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(user)" options={{ headerShown: false }} />
+                <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+                <Stack.Screen name="account" />
+              </Stack>
+              <StatusBar hidden={false} style="dark" />
+            </CommDataProvider>
+          </NotificationProvider>
+        </QueryProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

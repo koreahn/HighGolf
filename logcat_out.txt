@@ -1,0 +1,20 @@
+06-18 15:16:23.359  1455  3526 W WindowManager: Exception thrown during dispatchAppVisibility Window{b491ce8 u0 com.highgolf.HighGolf/com.highgolf.HighGolf.MainActivity EXITING}
+
+06-18 15:35:37.566  1455  1567 W PackageManager: java.lang.IllegalArgumentException: Unable to get package com.highgolf.HighGolf
+
+06-18 15:35:38.323 18370 18370 W Finsky  : [2] aegq.b(126): STU: Failed to get storage stats for package 'com.highgolf.HighGolf' (1601: Error getting stats: android.content.pm.PackageManager.NameNotFoundException)
+
+06-18 15:57:18.002 25857 25946 W GOS:PackageUtil: isPackageInstalledAsUser(). Exception: android.content.pm.PackageManager$NameNotFoundException: com.highgolf.HighGolf
+
+06-18 15:57:53.221  1455  2981 W WindowManager: Exception thrown during dispatchAppVisibility Window{1ccb0a5 u0 com.highgolf.HighGolf/com.highgolf.HighGolf.MainActivity EXITING}
+
+06-18 15:58:02.730  1455  6310 E AppOps  : java.lang.SecurityException: Specified package "com.highgolf.HighGolf" under uid -1 but it is not
+
+06-18 16:06:54.320 26999 26999 E AppButtonsPrefCtl: Exception when retrieving package:com.highgolf.HighGolf
+
+06-18 16:06:54.320 26999 26999 E AppButtonsPrefCtl: android.content.pm.PackageManager$NameNotFoundException: com.highgolf.HighGolf
+
+06-18 16:06:54.537 18370 18612 W ResourcesManager: java.io.IOException: Failed to load asset path /data/app/~~DvIivdyMBKmqze5UOR38yA==/com.highgolf.HighGolf-djdb_-FbcxNuzhRd3BN9Dw==/base.apk
+
+
+

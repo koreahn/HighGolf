@@ -44,11 +44,11 @@ const BookingStatus = () => {
     );
 
     if (bookingDate < currentDate) {
-      Alert.alert("Cannot cancel", "이전 예약은 취소할 수 없습니다.");
+      Alert.alert("Cannot cancel", "Previous bookings cannot be canceled.");
       return;
     }
 
-    if (await confirm("Cancel", `예약을 취소하시겠습니까??`)) {
+    if (await confirm("Cancel", `Would you like to cancel the booking?`)) {
       updateBook(
         {
           id: booking.booking_id,
@@ -61,7 +61,7 @@ const BookingStatus = () => {
         },
         {
           onSuccess: () => {
-            Alert.alert(`예약이 취소되었습니다.`);
+            Alert.alert(`The booking has been canceled.`);
           },
         }
       );
@@ -81,9 +81,9 @@ const BookingStatus = () => {
                   <Text>{status.booking_dt}</Text>
                   <Text>{`${status.start_tm} ~ ${status.end_tm}`}</Text>
                   {status.status === "WAITING" ? (
-                    <Text>승인대기</Text>
+                    <Text>Pending approval</Text>
                   ) : status.status === "CANCELED" ? (
-                    <Text>취소</Text>
+                    <Text>Canceled</Text>
                   ) : (
                     <TouchableOpacity onPress={() => onCancelClick(status)}>
                       <Text style={{ fontWeight: "600", color: Colors.blue }}>
@@ -96,7 +96,7 @@ const BookingStatus = () => {
           )
         ) : (
           <View style={{ marginTop: 10, marginLeft: 10 }}>
-            <Text>예약 내역이 없습니다.</Text>
+            <Text>No booking history available.</Text>
           </View>
         )}
       </ScrollView>
@@ -124,7 +124,7 @@ const BookingStatus = () => {
             style={styles.title}
             onPress={() => onBookClick(bookingType)}
           >
-            <Text style={styles.labelText}>예약</Text>
+            <Text style={styles.labelText}>Booking</Text>
             <MaterialIcons
               name="navigate-next"
               size={32}
@@ -150,22 +150,22 @@ const BookingStatus = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader headerTtitle="예약 현황" />
+      <CustomHeader headerTtitle="Booking Status" />
       <View style={{ marginTop: 20 }} />
       {renderStatusByType(
         "practice",
         require("@assets/images/practice.png"),
-        "연습 예약"
+        "Book Practice"
       )}
       {renderStatusByType(
         "screen",
         require("@assets/images/screen.png"),
-        "스크린 예약"
+        "Book Screen Golf"
       )}
       {renderStatusByType(
         "lesson",
         require("@assets/images/lesson.png"),
-        "레슨 예약"
+        "Book Lesson"
       )}
       {(loading || isLoading) && <LoadingIndicator />}
     </View>

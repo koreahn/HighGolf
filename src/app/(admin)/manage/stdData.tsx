@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import CustomHeader from "@/components/CustomHeader";
 import CustomButton from "@/components/CustomButton";
-import { CustomInputA } from "@/components/CustomInput";
+import { CustomInputA, CustomTimePicker } from "@/components/CustomInput";
 import LoadingIndicator from "@/components/LodingIndicator";
 import { useRouter } from "expo-router";
 import { Tables } from "@/types";
@@ -108,7 +108,7 @@ const ManageStdData = () => {
     <View style={styles.container}>
       <CustomHeader headerTtitle="Manage Standard Data" />
       <ScrollView>
-        <CustomInputA
+        {/* <CustomInputA
           name="EVEN_BAY_START_TIME"
           placeholder="Even Bay Start Time (HH:MM)"
           label="Even Start"
@@ -120,8 +120,20 @@ const ManageStdData = () => {
               message: "Type in HH:MM format",
             },
           }}
+        /> */}
+        <CustomTimePicker
+          name="EVEN_BAY_START_TIME"
+          label="Even Start"
+          control={control}
+          rules={{
+            required: "Even Bay Start Time is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
         />
-        <CustomInputA
+        {/* <CustomInputA
           name="EVEN_BAY_END_TIME"
           placeholder="Even Bay End Time (HH:MM)"
           label="Even End"
@@ -133,8 +145,20 @@ const ManageStdData = () => {
               message: "Type in HH:MM format",
             },
           }}
+        /> */}
+        <CustomTimePicker
+          name="EVEN_BAY_END_TIME"
+          label="Even End"
+          control={control}
+          rules={{
+            required: "Even Bay End Time is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
         />
-        <CustomInputA
+        {/* <CustomInputA
           name="ODD_BAY_START_TIME"
           placeholder="Odd Bay Start Time (HH:MM)"
           label="Odd Start"
@@ -146,8 +170,20 @@ const ManageStdData = () => {
               message: "Type in HH:MM format",
             },
           }}
+        /> */}
+        <CustomTimePicker
+          name="ODD_BAY_START_TIME"
+          label="Odd Start"
+          control={control}
+          rules={{
+            required: "Odd Bay Start is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
         />
-        <CustomInputA
+        {/* <CustomInputA
           name="ODD_BAY_END_TIME"
           placeholder="Odd Bay End Time (HH:MM)"
           label="Odd End"
@@ -159,8 +195,20 @@ const ManageStdData = () => {
               message: "Type in HH:MM format",
             },
           }}
+        /> */}
+        <CustomTimePicker
+          name="ODD_BAY_END_TIME"
+          label="Odd End"
+          control={control}
+          rules={{
+            required: "Odd Bay End Time is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
         />
-        <CustomInputA
+        {/* <CustomInputA
           name="SCREEN_START_TIME"
           placeholder="Screen Start Time (MM)"
           label="Scrn Start"
@@ -172,10 +220,34 @@ const ManageStdData = () => {
               message: "Type in HH:MM format",
             },
           }}
+        /> */}
+        <CustomTimePicker
+          name="SCREEN_START_TIME"
+          label="Scrn Start"
+          control={control}
+          rules={{
+            required: "Screen Start Time is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
         />
-        <CustomInputA
+        {/* <CustomInputA
           name="SCREEN_END_TIME"
           placeholder="Screen End Time (MM)"
+          label="Scrn End"
+          control={control}
+          rules={{
+            required: "Screen End Time is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
+        /> */}
+        <CustomTimePicker
+          name="SCREEN_END_TIME"
           label="Scrn End"
           control={control}
           rules={{
@@ -198,8 +270,9 @@ const ManageStdData = () => {
               message: "Type in MM format",
             },
           }}
+          inputMode="numeric"
         />
-        <CustomInputA
+        {/* <CustomInputA
           name="LESSON_START_TIME"
           placeholder="Lesson Start Time (HH:MM)"
           label="Lesson Start"
@@ -211,10 +284,34 @@ const ManageStdData = () => {
               message: "Type in HH:MM format",
             },
           }}
+        /> */}
+        <CustomTimePicker
+          name="LESSON_START_TIME"
+          label="Lesson Start"
+          control={control}
+          rules={{
+            required: "Lesson Start Time is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
         />
-        <CustomInputA
+        {/* <CustomInputA
           name="LESSON_END_TIME"
           placeholder="Lesson End Time (HH:MM)"
+          label="Lesson End"
+          control={control}
+          rules={{
+            required: "Lesson End Time is required",
+            pattern: {
+              value: /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/,
+              message: "Type in HH:MM format",
+            },
+          }}
+        /> */}
+        <CustomTimePicker
+          name="LESSON_END_TIME"
           label="Lesson End"
           control={control}
           rules={{
@@ -237,6 +334,7 @@ const ManageStdData = () => {
               message: "Type in MM format",
             },
           }}
+          inputMode="numeric"
         />
         <CustomInputA
           name="PRACTICE_CNT_FOR_DAY"
@@ -250,6 +348,7 @@ const ManageStdData = () => {
               message: "Type in MM format",
             },
           }}
+          inputMode="numeric"
         />
       </ScrollView>
       <View>

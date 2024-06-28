@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  BackHandler,
 } from "react-native";
 import ImgBackground from "@components/ImgBackground";
 import CustomButton from "@/components/CustomButton";
@@ -14,7 +15,7 @@ import Colors from "@/constants/Colors";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { useUserBookingStatusCnt } from "@/api/bookingStatus";
 import LoadingIndicator from "@/components/LodingIndicator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { confirm, getFormatDate } from "@/components/commonFunc";
 import { useUpdateUserMbr } from "@/api/userMbrs";
 import { useInsertApproval } from "@/api/approvals";
@@ -27,12 +28,32 @@ import {
 } from "@/api/subscriptions";
 import { sendPushNotificationToUser } from "@/lib/notifications";
 import CustomText from "@/components/CustomText";
+import { useIsFocused } from "@react-navigation/native";
 
 const Text = CustomText;
 
 type UserMbr = Tables<"user_mbrs">;
 
 export default function UserHome() {
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const backAction = () => {
+      if (isFocused) {
+        BackHandler.exitApp();
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [isFocused]);
+
   const router = useRouter();
   const { user, fetchUser } = useAuthContext();
   const [loading, setLoading] = useState(false);
@@ -55,8 +76,8 @@ export default function UserHome() {
   const onStopStartClick = async (type: string) => {
     if (
       !(await confirm(
-        "멤버쉽",
-        `멤버쉽을 ${type === "stop" ? "일시 중지" : "다시 시작"} 하시겠습니까?`
+        "Membership",
+        `Do you want to ${type === "stop" ? "suspend" : "restart"}?`
       ))
     ) {
       return;
@@ -119,9 +140,10 @@ export default function UserHome() {
               "myapp://admin/manage/approvals"
             );
             Alert.alert(
+              "Membership",
               `${
-                type === "stop" ? "일시 중지" : "다시 시작"
-              } 가 신청되었습니다.`
+                type === "stop" ? "Membership suspension" : "Membership restart"
+              } has been requested.`
             );
             // router.push("/(user)/");
           },
@@ -146,22 +168,22 @@ export default function UserHome() {
         <View style={styles.cardContainer}>
           <View style={{ flex: 0.6 }}>
             <Text>
-              <Text style={styles.welcomeText}>{`${user.user_name} 님`}</Text>
-              <Text>, 반갑습니다.</Text>
+              <Text>Hello, </Text>
+              <Text style={styles.welcomeText}>{`${user.user_name}`}</Text>
             </Text>
           </View>
           <View style={{ flex: 1.4, gap: 10 }}>
             <Text>
               {user.mbr_type
-                ? `회원님은 현재 ${user.mbr_desc} 이용 중 입니다.`
-                : `회원님은 현재 Welcome Guest 입니다.`}
+                ? `You are ${user.mbr_name} Member.`
+                : `You are a Welcome Guest.`}
             </Text>
             {user.mbr_type && (
-              <Text>{`기긴: ${user.join_dt} ~ ${user.finish_dt}`}</Text>
+              <Text>{`Preod: ${user.join_dt} ~ ${user.finish_dt}`}</Text>
             )}
             {user.mbr_type && (
               <Text>
-                <Text>멤버쉽 상태: </Text>
+                <Text>Membership Status: </Text>
                 <Text
                   style={{
                     color:
@@ -170,13 +192,14 @@ export default function UserHome() {
                         : Colors.black,
                   }}
                 >
-                  {user.status === "WAITING"
+                  {/* {user.status === "WAITING"
                     ? "승인대기 중"
                     : user.status === "FINISH"
                     ? "종료"
                     : user.status === "STOPPED"
                     ? "중지"
-                    : "정상"}
+                    : "정상"} */}
+                  {user.status}
                 </Text>
               </Text>
             )}
@@ -202,7 +225,7 @@ export default function UserHome() {
                   </TouchableOpacity>
                 </View>
               )}
-            {user.status === "STOPPED" && (
+            {/* {user.status === "STOPPED" && (
               <View style={{ alignItems: "flex-end" }}>
                 <TouchableOpacity
                   style={{
@@ -218,7 +241,7 @@ export default function UserHome() {
                   <Text style={{ textAlign: "center" }}>Start</Text>
                 </TouchableOpacity>
               </View>
-            )}
+            )} */}
           </View>
           <View style={{ flex: 0.8 }}>
             <TouchableOpacity
@@ -235,11 +258,11 @@ export default function UserHome() {
                 }}
               >
                 <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                  예약현황{"  "}
+                  Booking Status{"  "}
                 </Text>
                 <AntDesign name="arrowright" size={20} color={Colors.black} />
               </View>
-              <Text>{`연습 예약 (${bookingCnt?.[0].practice_cnt}) / 스크린 예약 (${bookingCnt?.[0].screen_cnt}) / 레슨 예약 (${bookingCnt?.[0].lesson_cnt})`}</Text>
+              <Text>{`Practice (${bookingCnt?.[0].practice_cnt}) / Screen (${bookingCnt?.[0].screen_cnt}) / Lesson (${bookingCnt?.[0].lesson_cnt})`}</Text>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 0.8 }}>
@@ -257,11 +280,11 @@ export default function UserHome() {
                 }}
               >
                 <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                  주문현황{"  "}
+                  Order Status{"  "}
                 </Text>
                 <AntDesign name="arrowright" size={20} color={Colors.black} />
               </View>
-              <Text>{`주문 (${orderCnt?.[0].ordered}) / 준비중 (${orderCnt?.[0].preparing}) / 지불필요 (${orderCnt?.[0].notpaid}) / 취소 (${orderCnt?.[0].canceled})`}</Text>
+              <Text>{`Ordered (${orderCnt?.[0].ordered}) / Preparing (${orderCnt?.[0].preparing}) / Not Paid (${orderCnt?.[0].notpaid}) / Canceled (${orderCnt?.[0].canceled})`}</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -273,7 +296,7 @@ export default function UserHome() {
             }}
           >
             <Text style={{ color: Colors.blue, fontWeight: "bold" }}>
-              개인정보 수정{" "}
+              Edit Profile{" "}
             </Text>
             <AntDesign name="arrowright" size={18} color={Colors.blue} />
           </TouchableOpacity>
@@ -282,7 +305,7 @@ export default function UserHome() {
       <View style={{ height: "5%" }} />
       <ScrollView style={{ width: "100%", height: "50%" }}>
         <CustomButton
-          text="연습 예약"
+          text="Book Practice"
           onPress={() => router.push("/(user)/book/practice")}
           bgColor={Colors.white}
           fgColor={Colors.black}
@@ -290,7 +313,7 @@ export default function UserHome() {
           opacityNum="0.9"
         />
         <CustomButton
-          text="스크린 골프 예약"
+          text="Book Screen Golf"
           onPress={() => router.push("/(user)/book/screen")}
           bgColor={Colors.white}
           fgColor={Colors.black}
@@ -298,7 +321,7 @@ export default function UserHome() {
           opacityNum="0.9"
         />
         <CustomButton
-          text="골프레슨 예약"
+          text="Book Lesson"
           onPress={() => router.push("/(user)/book/lesson")}
           bgColor={Colors.white}
           fgColor={Colors.black}
@@ -306,7 +329,7 @@ export default function UserHome() {
           opacityNum="0.9"
         />
         <CustomButton
-          text="음료 & 스낵 주문"
+          text="Order Beverages & Snacks"
           onPress={() => router.push("/(user)/food/order")}
           bgColor={Colors.white}
           fgColor={Colors.black}

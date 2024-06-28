@@ -80,6 +80,8 @@ export const useUpdateUserMbr = () => {
         throw new Error(fetchError.message);
       }
 
+      console.log(updatedFields);
+
       const newStoppedCnt =
         (existingData.stopped_cnt === null ? 0 : existingData.stopped_cnt) +
         (!updatedFields.stopped_cnt ? 0 : updatedFields.stopped_cnt);
@@ -101,6 +103,7 @@ export const useUpdateUserMbr = () => {
         .single();
 
       if (error) {
+        console.log(error);
         throw new Error(error.message);
       }
       return updatedUserMbr;

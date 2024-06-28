@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { Alert } from "react-native";
 
 type UsersWithMbr = Functions<"get_user_and_latest_membership">;
@@ -63,39 +63,51 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<UserWithMbr>(defaultUser);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
+
+  // const safeRouterPush = (path: string) => {
+  //   if (pathname !== path) {
+  //     router.push(path);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchSession = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-
       setSession(session);
-
       setLoading(false);
     };
 
     fetchSession();
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      if (_event === "TOKEN_REFRESHED") {
-        return;
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        // console.log(_event);
+        if (_event === "TOKEN_REFRESHED" || _event === "INITIAL_SESSION") {
+          return;
+        }
+        setSession(session);
       }
-      setSession(session);
-    });
+    );
+
+    return () => {
+      subscription?.subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
-    fetchUser();
+    if (session) fetchUser();
   }, [session]);
 
   const fetchUser = async () => {
     if (session) {
+      // console.log("fetch user");
       const { data, error } = await supabase.rpc(
         "get_user_and_latest_membership",
         { p_id: session.user.id }
       );
-
       if (error) {
         throw new Error(error.message);
       }
@@ -104,15 +116,18 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       } else {
         setUser(data[0]);
         if (data[0].user_type === "ADMIN") {
-          router.push("/(admin)/");
+          router.push({ pathname: "/(admin)/" });
+          // safeRouterPush("/(admin)/");
         } else {
           if (!data[0].user_name) {
             Alert.alert(
               "이름을 저장하신 후 정상적으로 서비스를 이용하실 수 있습니다."
             );
             router.push("/account");
+            // safeRouterPush("/account");
           } else {
-            router.push("/(user)/");
+            router.push({ pathname: "/(user)/" });
+            // safeRouterPush("/(user)/");
           }
         }
       }

@@ -120,20 +120,51 @@ const Users = () => {
   const renderUsers: ListRenderItem<UserWithMbr> = ({ item }) => {
     return (
       <View style={styles.userContainer}>
-        <View
-          style={[styles.rowContainer, { justifyContent: "space-between" }]}
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/(admin)/mngUsers/manageUser",
+              params: {
+                user_id: item.user_id,
+                user_type: item.user_type,
+                user_name: item.user_name,
+                contact: item.contact,
+                user_mbrs_id: item.user_mbrs_id,
+                mbr_type: item.mbr_type,
+                mbr_name: item.mbr_name,
+                nick: item.nick,
+                division: item.division,
+                status: item.status,
+                pmt_amt: item.pmt_amt,
+                pending_amt: item.pending_amt,
+                pmt_dt: item.pmt_dt,
+                pmt_mthd: item.pmt_mthd,
+                join_dt: item.join_dt,
+                finish_dt: item.finish_dt,
+                stop_cnt: item.stop_cnt,
+                stopped_cnt: item.stopped_cnt,
+                stop_desc: item.stop_desc,
+                stop_dt: item.stop_dt,
+                start_dt: item.start_dt,
+                description: item.description,
+              },
+            })
+          }
         >
-          <View style={styles.rowContainer}>
-            <MaterialCommunityIcons
-              name="account-circle-outline"
-              size={20}
-              color={Colors.black}
-              style={styles.icon}
-            />
-            <Text style={styles.nameText}>{item.user_name}</Text>
-            <Text style={styles.subText}> ({item.user_type})</Text>
-          </View>
-          <TouchableOpacity
+          <View
+            style={[styles.rowContainer, { justifyContent: "space-between" }]}
+          >
+            <View style={styles.rowContainer}>
+              <MaterialCommunityIcons
+                name="account-circle-outline"
+                size={20}
+                color={Colors.black}
+                style={styles.icon}
+              />
+              <Text style={styles.nameText}>{item.user_name}</Text>
+              <Text style={styles.subText}> ({item.user_type})</Text>
+            </View>
+            {/* <TouchableOpacity
             style={styles.rowContainer}
             onPress={() =>
               router.push({
@@ -164,96 +195,99 @@ const Users = () => {
                 },
               })
             }
-          >
-            <Text>Edit </Text>
-            <AntDesign name="arrowright" size={20} color={Colors.black} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.rowContainer}>
-          <MaterialCommunityIcons
-            name="card-account-phone-outline"
-            size={18}
-            color={Colors.black}
-            style={styles.icon}
-          />
-          <Text style={styles.subText}>Contact: {item.contact}</Text>
-        </View>
-        {item.mbr_name && item.mbr_name !== "" && (
-          <View style={styles.rowContainer}>
-            <MaterialCommunityIcons
-              name="ticket-outline"
-              size={18}
-              color={Colors.black}
-              style={styles.icon}
-            />
-            <Text style={styles.subText}>
-              Membership: {item.mbr_name} ({item.mbr_type})
-            </Text>
-          </View>
-        )}
-        {item.join_dt && item.join_dt !== "" && (
-          <View style={styles.rowContainer}>
-            <AntDesign
-              name="calendar"
-              size={18}
-              color={Colors.black}
-              style={styles.icon}
-            />
-            <Text style={styles.subText}>
-              Term: {`${item.join_dt} ~ ${item.finish_dt}`}
-            </Text>
-          </View>
-        )}
-        {item.stop_dt && item.stop_dt !== "" && (
-          <View style={styles.rowContainer}>
-            <MaterialCommunityIcons
-              name="calendar-remove-outline"
-              size={18}
-              color={Colors.black}
-              style={styles.icon}
-            />
-            <Text
-              style={[
-                styles.subText,
-                { color: Colors.red, fontWeight: "bold" },
-              ]}
-            >
-              Stop Date: {item.stop_dt}
-            </Text>
-          </View>
-        )}
-        {item.pending_amt > 0 && (
-          <View style={styles.rowContainer}>
-            <AntDesign
-              name="warning"
-              size={18}
-              color={Colors.red}
-              style={styles.icon}
-            />
-            <Text
-              style={[
-                styles.subText,
-                { color: Colors.red, fontWeight: "bold" },
-              ]}
-            >
-              Pending: {`₹ ${item.pending_amt}`}
-            </Text>
-          </View>
-        )}
-        {item.description && item.description !== "" && (
-          <>
+          > */}
             <View style={styles.rowContainer}>
-              <SimpleLineIcons
-                name="notebook"
+              <Text>Edit </Text>
+              <AntDesign name="arrowright" size={20} color={Colors.black} />
+            </View>
+            {/* </TouchableOpacity> */}
+          </View>
+          <View style={styles.rowContainer}>
+            <MaterialCommunityIcons
+              name="card-account-phone-outline"
+              size={18}
+              color={Colors.black}
+              style={styles.icon}
+            />
+            <Text style={styles.subText}>Contact: {item.contact}</Text>
+          </View>
+          {item.mbr_name && item.mbr_name !== "" && (
+            <View style={styles.rowContainer}>
+              <MaterialCommunityIcons
+                name="ticket-outline"
                 size={18}
                 color={Colors.black}
                 style={styles.icon}
               />
-              <Text style={styles.subText}>Remark: </Text>
+              <Text style={styles.subText}>
+                Membership: {item.mbr_name} ({item.mbr_type})
+              </Text>
             </View>
-            <Text style={styles.subText}>{item.description}</Text>
-          </>
-        )}
+          )}
+          {item.join_dt && item.join_dt !== "" && (
+            <View style={styles.rowContainer}>
+              <AntDesign
+                name="calendar"
+                size={18}
+                color={Colors.black}
+                style={styles.icon}
+              />
+              <Text style={styles.subText}>
+                Term: {`${item.join_dt} ~ ${item.finish_dt}`}
+              </Text>
+            </View>
+          )}
+          {item.stop_dt && item.stop_dt !== "" && (
+            <View style={styles.rowContainer}>
+              <MaterialCommunityIcons
+                name="calendar-remove-outline"
+                size={18}
+                color={Colors.black}
+                style={styles.icon}
+              />
+              <Text
+                style={[
+                  styles.subText,
+                  { color: Colors.red, fontWeight: "bold" },
+                ]}
+              >
+                Stop Date: {item.stop_dt}
+              </Text>
+            </View>
+          )}
+          {item.pending_amt > 0 && (
+            <View style={styles.rowContainer}>
+              <AntDesign
+                name="warning"
+                size={18}
+                color={Colors.red}
+                style={styles.icon}
+              />
+              <Text
+                style={[
+                  styles.subText,
+                  { color: Colors.red, fontWeight: "bold" },
+                ]}
+              >
+                Pending: {`₹ ${item.pending_amt}`}
+              </Text>
+            </View>
+          )}
+          {item.description && item.description !== "" && (
+            <>
+              <View style={styles.rowContainer}>
+                <SimpleLineIcons
+                  name="notebook"
+                  size={18}
+                  color={Colors.black}
+                  style={styles.icon}
+                />
+                <Text style={styles.subText}>Remark: </Text>
+              </View>
+              <Text style={styles.subText}>{item.description}</Text>
+            </>
+          )}
+        </TouchableOpacity>
       </View>
     );
   };

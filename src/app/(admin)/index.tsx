@@ -4,13 +4,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
 } from "react-native";
 import ImgBackground from "@components/ImgBackground";
 import CustomButton from "@/components/CustomButton";
 import { useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { useUserMbrCnt } from "@/api/users";
@@ -25,10 +26,30 @@ import {
   useOrderUpdateSubscription,
 } from "@/api/subscriptions";
 import CustomText from "@/components/CustomText";
+import { useIsFocused } from "@react-navigation/native";
 
 const Text = CustomText;
 
 export default function AdminHome() {
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const backAction = () => {
+      if (isFocused) {
+        BackHandler.exitApp();
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [isFocused]);
+
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
@@ -99,55 +120,58 @@ export default function AdminHome() {
           />
 
           <TouchableOpacity
-            style={styles.rowContainer}
             onPress={() => router.push("/(admin)/mngUsers/users")}
           >
-            <Text style={styles.title}>User Status</Text>
-            <AntDesign name="arrowright" size={20} color={Colors.black} />
+            <View style={styles.rowContainer}>
+              <Text style={styles.title}>User Status</Text>
+              <AntDesign name="arrowright" size={20} color={Colors.black} />
+            </View>
+            <View>
+              <Text style={styles.statusText}>
+                {`All (${userCnt?.[0].all_cnt}) / Practice (${userCnt?.[0].practice_cnt}) / Lesson (${userCnt?.[0].lesson_cnt})`}
+              </Text>
+              <Text
+                style={styles.statusText}
+              >{`Guest (${userCnt?.[0].guest_cnt}) / Stopped (${userCnt?.[0].stop_cnt}) / Finish (${userCnt?.[0].finish_cnt})`}</Text>
+            </View>
           </TouchableOpacity>
-          <View>
-            <Text style={styles.statusText}>
-              {`All (${userCnt?.[0].all_cnt}) / Practice (${userCnt?.[0].practice_cnt}) / Lesson (${userCnt?.[0].lesson_cnt})`}
-            </Text>
-            <Text
-              style={styles.statusText}
-            >{`Guest (${userCnt?.[0].guest_cnt}) / Stopped (${userCnt?.[0].stop_cnt}) / Finish (${userCnt?.[0].finish_cnt})`}</Text>
-          </View>
           <View style={styles.separator} />
 
           <TouchableOpacity
-            style={styles.rowContainer}
             onPress={() => router.push("/(admin)/status/booking")}
           >
-            <Text style={styles.title}>Booking Status ({today})</Text>
-            <AntDesign name="arrowright" size={20} color={Colors.black} />
+            <View style={styles.rowContainer}>
+              <Text style={styles.title}>Booking Status ({today})</Text>
+              <AntDesign name="arrowright" size={20} color={Colors.black} />
+            </View>
+            <View>
+              <Text style={styles.statusText}>
+                {`Practice (${bookingCnt?.[0].practice_cnt}) / Screen (${bookingCnt?.[0].screen_cnt}) / Lesson(${bookingCnt?.[0].lesson_cnt})`}
+              </Text>
+            </View>
           </TouchableOpacity>
-          <View>
-            <Text style={styles.statusText}>
-              {`Practice (${bookingCnt?.[0].practice_cnt}) / Screen (${bookingCnt?.[0].screen_cnt}) / Lesson(${bookingCnt?.[0].lesson_cnt})`}
-            </Text>
-          </View>
           <View style={styles.separator} />
 
           <TouchableOpacity
-            style={styles.rowContainer}
             onPress={() => router.push("/(admin)/status/order")}
           >
-            <Text style={styles.title}>Order Status ({today})</Text>
-            <AntDesign name="arrowright" size={20} color={Colors.black} />
+            <View style={styles.rowContainer}>
+              <Text style={styles.title}>Order Status ({today})</Text>
+              <AntDesign name="arrowright" size={20} color={Colors.black} />
+            </View>
+            <View>
+              <Text style={styles.statusText}>
+                {orderCnt?.[0] &&
+                  `unfinish (${
+                    orderCnt[0].ordered + orderCnt[0].preparing
+                  }) / not paid (${orderCnt[0].notpaid})`}
+              </Text>
+              <Text style={styles.statusText}>
+                {orderCnt?.[0] &&
+                  `finish (${orderCnt[0].completed}) / cancel (${orderCnt[0].canceled})`}
+              </Text>
+            </View>
           </TouchableOpacity>
-          <View>
-            <Text style={styles.statusText}>
-              {orderCnt?.[0] &&
-                `unfinish (${
-                  orderCnt[0].ordered + orderCnt[0].preparing
-                }) / not paid (${orderCnt[0].notpaid})`}
-            </Text>
-            <Text style={styles.statusText}>
-              {orderCnt?.[0] &&
-                `finish (${orderCnt[0].completed}) / cancel (${orderCnt[0].canceled})`}
-            </Text>
-          </View>
         </View>
       </View>
       <View style={{ height: "2%" }} />

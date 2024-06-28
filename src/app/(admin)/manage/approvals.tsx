@@ -13,7 +13,7 @@ import CustomHeader from "@/components/CustomHeader";
 import LoadingIndicator from "@/components/LodingIndicator";
 import { useApprovalList, useUpdateApproval } from "@/api/approvals";
 import { Tables } from "@/database.types";
-import { confirm } from "@/components/commonFunc";
+import { confirm, getFormatDate } from "@/components/commonFunc";
 import { useUpdateUserMbr } from "@/api/userMbrs";
 import { useUpdateBooking } from "@/api/bookingStatus";
 import { useAuthContext } from "@/providers/AuthProvider";
@@ -75,6 +75,7 @@ const Approvals = () => {
                   : "NORMAL",
               stopped_cnt:
                 type === "approve" && appr.appr_type === "stop" ? 1 : 0,
+              stop_dt: getFormatDate(new Date()),
             },
           },
           {
@@ -92,7 +93,6 @@ const Approvals = () => {
   };
 
   const onUpdateApproval = async (appr: Approval, type: string) => {
-    console.log(appr.appr_type, appr.user_id, type);
     try {
       setLoading(true);
       updateApproval(

@@ -110,12 +110,6 @@ const Screen = () => {
       return;
     }
 
-    const isAvailable = await checkAvailability();
-    if (!isAvailable) {
-      Alert.alert("선택한 시간에 이미 예약이 있습니다.");
-      return;
-    }
-
     if (isTimeWithinRange(startTime, endTime) === "1") {
       if (
         !(await confirm(
@@ -129,6 +123,12 @@ const Screen = () => {
       Alert.alert(
         `예약 가능한 시간은 ${stdStartTime} - ${stdEndTime} 사이입니다.`
       );
+      return;
+    }
+
+    const isAvailable = await checkAvailability();
+    if (!isAvailable) {
+      Alert.alert("선택한 시간에 이미 예약이 있습니다.");
       return;
     }
 

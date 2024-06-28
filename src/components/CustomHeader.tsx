@@ -19,9 +19,11 @@ const Text = CustomText;
 const CustomHeader = ({
   headerTtitle,
   path,
+  deleteFunc,
 }: {
   headerTtitle: string;
   path?: string;
+  deleteFunc?: () => void;
 }) => {
   const router = useRouter();
   const { user } = useAuthContext();
@@ -41,7 +43,14 @@ const CustomHeader = ({
           <View />
         )}
         <Text style={styles.title}>{headerTtitle}</Text>
-        <View />
+
+        {deleteFunc ? (
+          <TouchableOpacity onPress={deleteFunc}>
+            <AntDesign name="delete" size={24} color={Colors.black} />
+          </TouchableOpacity>
+        ) : (
+          <View />
+        )}
       </View>
     </SafeAreaView>
   );

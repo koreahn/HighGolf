@@ -170,7 +170,7 @@ const OrderStatus = () => {
             >
               <Text>
                 &#8226;{" "}
-                {`${basket.kor_nm} (₹${basket.price}) * ${basket.quantity}`}
+                {`${basket.eng_nm} (₹${basket.price}) * ${basket.quantity}`}
               </Text>
               <Text>₹ {basket.price * basket.quantity}</Text>
             </View>
@@ -250,7 +250,7 @@ const OrderStatus = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader headerTtitle="주문 현황" />
+      <CustomHeader headerTtitle="Order Status" />
       <View style={{ flex: 1 }}>
         <CalendarPicker
           selectedDate={selectedDate}

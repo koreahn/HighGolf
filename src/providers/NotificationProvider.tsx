@@ -19,8 +19,6 @@ const NotificationProvider = ({ children }: PropsWithChildren) => {
 
     if (!newToken || !user) return;
 
-    console.log(newToken, user.id);
-
     try {
       await supabase
         .from("users")
@@ -34,7 +32,6 @@ const NotificationProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
-      console.log("token", token);
       savePushToken(token);
     });
 
@@ -65,8 +62,9 @@ const NotificationProvider = ({ children }: PropsWithChildren) => {
     };
   }, []);
 
-  console.log("noti", notification);
-  console.log("expoPushToken", expoPushToken);
+  useEffect(() => {
+    savePushToken(expoPushToken);
+  }, [expoPushToken]);
 
   return <>{children}</>;
 };

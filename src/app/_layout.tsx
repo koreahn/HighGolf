@@ -64,9 +64,30 @@ function RootLayoutNav() {
                   headerShown: false,
                 }}
               >
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen name="(user)" options={{ headerShown: false }} />
-                <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="index"
+                  options={{
+                    headerShown: false,
+                    gestureEnabled: false,
+                    headerLeft: undefined,
+                  }}
+                />
+                <Stack.Screen
+                  name="(user)"
+                  options={{
+                    headerShown: false,
+                    gestureEnabled: false,
+                    headerLeft: undefined,
+                  }}
+                />
+                <Stack.Screen
+                  name="(admin)"
+                  options={{
+                    headerShown: false,
+                    gestureEnabled: false,
+                    headerLeft: undefined,
+                  }}
+                />
                 <Stack.Screen name="account" />
               </Stack>
               <StatusBar hidden={false} style="dark" />

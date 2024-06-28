@@ -67,7 +67,7 @@ const SignIn = () => {
       });
 
       if (error) {
-        console.log("err", error);
+        console.error("err", error);
         Alert.alert(error.message);
       }
     } catch (err) {
@@ -89,7 +89,7 @@ const SignIn = () => {
       });
 
       if (error) {
-        console.log("err", error);
+        console.error("err", error);
         Alert.alert(error.message);
       }
     } catch (err) {
@@ -112,7 +112,7 @@ const SignIn = () => {
         });
 
         if (error) {
-          console.log("err", error);
+          console.error("err", error);
           Alert.alert(error.message);
         } else {
           Alert.alert("새 OTP가 발송되었습니다.");
@@ -152,7 +152,7 @@ const SignIn = () => {
               message: "전화번호 형식이 올바르지 않습니다",
             },
           }}
-          inputMode="tel"
+          inputMode="numeric"
         />
         {ready && (
           <CustomInput

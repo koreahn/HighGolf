@@ -114,7 +114,7 @@ export const useDeleteMembership = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    async mutationFn(id: number) {
+    async mutationFn({ id }: { id: number }) {
       const { error } = await supabase
         .from("memberships")
         .delete()

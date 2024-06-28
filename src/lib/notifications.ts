@@ -68,7 +68,6 @@ export async function registerForPushNotificationsAsync() {
         projectId: Constants.expoConfig?.extra?.eas.projectId,
       })
     ).data;
-    // console.log("token", token);
   } else {
     // alert("Must use physical device for Push Notifications");
   }
@@ -130,15 +129,12 @@ export const sendPushNotificationToUser = async (
     tokens = await getTokens();
   }
 
-  console.log(title, body, token, url);
-
   if (user_id) {
     if (token) sendPushNotification(token, title, body, url);
   } else {
     for (const { token } of tokens) {
       if (token) {
         sendPushNotification(token, title, body, url);
-        console.log(token);
       }
     }
   }

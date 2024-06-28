@@ -12,7 +12,11 @@ import {
   CustomTimePicker,
 } from "@/components/CustomInput";
 import LoadingIndicator from "@/components/LodingIndicator";
-import { useInsertFacility, useUpdateFacility } from "@/api/facilities";
+import {
+  useInsertFacility,
+  useUpdateFacility,
+  useDeleteFacility,
+} from "@/api/facilities";
 
 type Facility = Tables<"facilities">;
 
@@ -45,6 +49,7 @@ const ManageFacility = () => {
 
   const { mutate: insertFacility } = useInsertFacility();
   const { mutate: updateFacility } = useUpdateFacility();
+  const { mutate: deleteFacility } = useDeleteFacility();
 
   const {
     control,
@@ -108,10 +113,32 @@ const ManageFacility = () => {
     setLoading(true);
   };
 
+  const deleteFunc = async () => {
+    try {
+      setLoading(true);
+      deleteFacility(
+        {
+          id: facility_id,
+        },
+        {
+          onSuccess: () => {
+            Alert.alert("The Facility has been deleted.");
+            router.back();
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Error delete Facility:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <CustomHeader
         headerTtitle={facility_id > 0 ? "Edit Facility" : "Register Facility"}
+        {...(facility_id > 0 && { path: undefined, deleteFunc: deleteFunc })}
       />
       <ScrollView>
         <CustomSelectDropdown

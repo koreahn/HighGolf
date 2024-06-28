@@ -44,4 +44,4 @@ expo-env.d.ts
 #user
 install
 *.sql
-google-services.json
+# google-services.json

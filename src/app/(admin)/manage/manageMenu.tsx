@@ -4,7 +4,7 @@ import Colors from "@/constants/Colors";
 import CustomHeader from "@/components/CustomHeader";
 import CustomButton from "@/components/CustomButton";
 import { useForm } from "react-hook-form";
-import { useInsertMenu, useUpdateMenu } from "@/api/menus";
+import { useInsertMenu, useUpdateMenu, useDeleteMenu } from "@/api/menus";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Tables } from "@/types";
 import { CustomInputA } from "@/components/CustomInput";
@@ -36,6 +36,7 @@ const ManageMenu = () => {
 
   const { mutate: updateMenu } = useUpdateMenu();
   const { mutate: insertMenu } = useInsertMenu();
+  const { mutate: deleteMenu } = useDeleteMenu();
 
   const {
     control,
@@ -91,10 +92,32 @@ const ManageMenu = () => {
     setLoading(false);
   };
 
+  const deleteFunc = async () => {
+    try {
+      setLoading(true);
+      deleteMenu(
+        {
+          id: menu_id,
+        },
+        {
+          onSuccess: () => {
+            Alert.alert("The menu has been deleted.");
+            router.back();
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Error delete menu:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <CustomHeader
         headerTtitle={menu_id > 0 ? "Edit Menu" : "Register Menu"}
+        {...(menu_id > 0 && { path: undefined, deleteFunc: deleteFunc })}
       />
       <ScrollView>
         <CustomInputA

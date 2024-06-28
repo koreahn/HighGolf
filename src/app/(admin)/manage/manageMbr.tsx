@@ -8,7 +8,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Tables } from "@/types";
 import { CustomInputA, CustomSelectDropdown } from "@/components/CustomInput";
 import LoadingIndicator from "@/components/LodingIndicator";
-import { useInsertMembership, useUpdateMembership } from "@/api/memberships";
+import {
+  useInsertMembership,
+  useUpdateMembership,
+  useDeleteMembership,
+} from "@/api/memberships";
 
 type Membership = Tables<"memberships">;
 
@@ -55,6 +59,7 @@ const ManageMbr = () => {
 
   const { mutate: insertMbr } = useInsertMembership();
   const { mutate: updateMbr } = useUpdateMembership();
+  const { mutate: deleteMbr } = useDeleteMembership();
 
   const {
     control,
@@ -124,10 +129,32 @@ const ManageMbr = () => {
     setLoading(false);
   };
 
+  const deleteFunc = async () => {
+    try {
+      setLoading(true);
+      deleteMbr(
+        {
+          id: mbr_id,
+        },
+        {
+          onSuccess: () => {
+            Alert.alert("The membership has been deleted.");
+            router.back();
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Error delete membership:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <CustomHeader
         headerTtitle={mbr_id > 0 ? "Edit Membership" : "Register Membership"}
+        {...(mbr_id > 0 && { path: undefined, deleteFunc: deleteFunc })}
       />
       <ScrollView>
         <CustomSelectDropdown

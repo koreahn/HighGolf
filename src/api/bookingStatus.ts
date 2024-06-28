@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { InsertTables, UpdateTables } from "@/types";
+import { Alert } from "react-native";
 
 export const useBookingList = (type: string, booking_dt: string) => {
   return useQuery({
@@ -66,6 +67,12 @@ export const useInsertBooking = () => {
         .single();
 
       if (error) {
+        if (error.code === "23505") {
+          Alert.alert(
+            "예약 실패",
+            "다른 사용자에 의해 이미 예약된 시간입니다.\n다른 시간을 선택하세요."
+          );
+        }
         throw new Error(error.message);
       }
       return newBooking;

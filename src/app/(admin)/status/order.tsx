@@ -120,9 +120,10 @@ const OrderStatus = () => {
       if (error) {
         throw new Error(error.message);
       }
+
       getOrders();
       Alert.alert("Order status has been changed.");
-      console.log(updatedOrder.user_id);
+
       const body =
         updatedOrder.status === "PREPARING"
           ? "고객님의 주문이 준비중입니다."

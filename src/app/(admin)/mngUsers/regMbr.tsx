@@ -321,6 +321,7 @@ const RegMbr = () => {
                     message: "Please enter a number for Amount.",
                   },
                 }}
+                inputMode="numeric"
               />
               <CustomInputA
                 control={control}
@@ -334,6 +335,7 @@ const RegMbr = () => {
                     message: "Please enter a number for Amount.",
                   },
                 }}
+                inputMode="numeric"
               />
               <View
                 style={[

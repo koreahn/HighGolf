@@ -129,11 +129,11 @@ export const useDeleteFacility = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    async mutationFn(id: number) {
+    async mutationFn({ id }: { id: number }) {
       const { error } = await supabase
         .from("facilities")
         .delete()
-        .eq("facilities_id", id);
+        .eq("facility_id", id);
       if (error) {
         throw new Error(error.message);
       }

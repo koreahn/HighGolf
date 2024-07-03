@@ -77,7 +77,7 @@ export default function UserHome() {
     if (
       !(await confirm(
         "Membership",
-        `Do you want to ${type === "stop" ? "suspend" : "restart"}?`
+        `Do you want to ${type === "stop" ? "pause" : "restart"}?`
       ))
     ) {
       return;
@@ -221,7 +221,7 @@ export default function UserHome() {
                     }}
                     onPress={() => onStopStartClick("stop")}
                   >
-                    <Text style={{ textAlign: "center" }}>Stop</Text>
+                    <Text style={{ textAlign: "center" }}>Pause</Text>
                   </TouchableOpacity>
                 </View>
               )}

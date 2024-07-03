@@ -26,6 +26,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useCommDataContext } from "@/providers/CommDataProvider";
 import CustomText from "@/components/CustomText";
 import CustomTextInput from "@/components/\bCustomTextInput";
+import { confirm } from "@/components/commonFunc";
 
 const Text = CustomText;
 const TextInput = CustomTextInput;
@@ -56,6 +57,11 @@ const Screen = () => {
   const router = useRouter();
 
   const { getCodeByGroupAndCode } = useCommDataContext();
+
+  const stdStartTime =
+    getCodeByGroupAndCode("STD_TIME", "SCREEN_START_TIME") || "07:00";
+  const stdEndTime =
+    getCodeByGroupAndCode("STD_TIME", "SCREEN_END_TIME") || "23:00";
 
   useEffect(() => {
     const stdDates = getDates();
@@ -111,9 +117,25 @@ const Screen = () => {
       return;
     }
 
+    if (isTimeWithinRange(startTime, endTime) === "1") {
+      if (
+        !(await confirm(
+          "Book Screen",
+          `We close at ${stdEndTime}. Would you still like to book?`
+        ))
+      ) {
+        return;
+      }
+    } else if (!isTimeWithinRange(startTime, endTime)) {
+      Alert.alert(
+        `Booking is available between ${stdStartTime} and${stdEndTime}`
+      );
+      return;
+    }
+
     const isAvailable = await checkAvailability();
     if (!isAvailable) {
-      Alert.alert("There is already reservation at the selected time.");
+      Alert.alert("There is already booking at the selected time.");
       return;
     }
 
@@ -137,13 +159,13 @@ const Screen = () => {
         },
         {
           onSuccess: () => {
-            Alert.alert("The reservation has been made.");
+            Alert.alert("It has been booked.");
             router.push("/(admin)/");
           },
         }
       );
     } catch (err) {
-      console.error("Error booking practice:", err);
+      console.error("Error booking screen:", err);
     } finally {
       setLoading(false);
     }
@@ -173,6 +195,34 @@ const Screen = () => {
       console.error("Error checking screen booking availability:", err);
       return false;
     }
+  };
+
+  const convertToMinutes = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  };
+
+  const isTimeWithinRange = (start: string, end: string) => {
+    const startTime = convertToMinutes(start);
+    const endTime = convertToMinutes(end);
+    const stdStart = convertToMinutes(stdStartTime);
+    const stdEnd = convertToMinutes(stdEndTime);
+    const maxEnd = convertToMinutes("23:59");
+
+    if (
+      endTime > stdEnd &&
+      endTime >= convertToMinutes("23:00") &&
+      endTime <= maxEnd
+    ) {
+      return "1";
+    }
+
+    return (
+      startTime >= stdStart &&
+      startTime <= stdEnd &&
+      endTime >= stdStart &&
+      endTime <= stdEnd
+    );
   };
 
   const toggleTimePicker = () => {

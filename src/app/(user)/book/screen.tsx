@@ -51,9 +51,9 @@ const Screen = () => {
   const { getCodeByGroupAndCode } = useCommDataContext();
 
   const stdStartTime =
-    getCodeByGroupAndCode("STD_TIME", "SCREEN_START_TIME") || "09:00";
+    getCodeByGroupAndCode("STD_TIME", "SCREEN_START_TIME") || "07:00";
   const stdEndTime =
-    getCodeByGroupAndCode("STD_TIME", "SCREEN_END_TIME") || "21:00";
+    getCodeByGroupAndCode("STD_TIME", "SCREEN_END_TIME") || "23:00";
 
   useEffect(() => {
     const stdDates = getDates();
@@ -106,7 +106,7 @@ const Screen = () => {
 
   const onScreenBook = async () => {
     if (!selectedNum || !selectedScreen || !startTime) {
-      Alert.alert("참가인원, 스크린 ,시작시간은 필수입니다.");
+      Alert.alert("Select Participants, Screen and Booking Time.");
       return;
     }
 
@@ -114,21 +114,21 @@ const Screen = () => {
       if (
         !(await confirm(
           "스크린예약",
-          `${stdEndTime} 에 영업종료합니다.\n그래도 예약하시겠습니까?`
+          `We close at ${stdEndTime}. Would you still like to book?`
         ))
       ) {
         return;
       }
     } else if (!isTimeWithinRange(startTime, endTime)) {
       Alert.alert(
-        `예약 가능한 시간은 ${stdStartTime} - ${stdEndTime} 사이입니다.`
+        `Booking is available between ${stdStartTime} and${stdEndTime}`
       );
       return;
     }
 
     const isAvailable = await checkAvailability();
     if (!isAvailable) {
-      Alert.alert("선택한 시간에 이미 예약이 있습니다.");
+      Alert.alert("There is already a booking at the selected time.");
       return;
     }
 
@@ -150,7 +150,7 @@ const Screen = () => {
         },
         {
           onSuccess: () => {
-            Alert.alert("예약되었습니다.");
+            Alert.alert("It has been booked.");
             router.push("/(user)/");
           },
         }
@@ -223,7 +223,6 @@ const Screen = () => {
   useEffect(() => {
     if (!selectedNum || !startTime) return;
 
-    // const interval = 50;
     const interval = parseInt(
       getCodeByGroupAndCode("STD_TIME", "SCREEN_INTERVAL_TIME") || "50"
     );
@@ -239,7 +238,7 @@ const Screen = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader headerTtitle="스크린 골프 예약" />
+      <CustomHeader headerTtitle="Screen Golf" />
       <DatePicker
         selectedDate={selectedDate}
         currIndex={currIndex}
@@ -251,8 +250,8 @@ const Screen = () => {
       {isToday &&
       new Date().getTime() > new Date(`${today}T${stdEndTime}`).getTime() ? (
         <View style={styles.empty}>
-          <Text style={styles.emptyText}>이용 가능 시간이 아닙니다.</Text>
-          <Text style={styles.emptyText}>다른 날짜를 선택하세요.</Text>
+          <Text style={styles.emptyText}>Not available during this time.</Text>
+          <Text style={styles.emptyText}>Please choose another date.</Text>
         </View>
       ) : (
         <View style={styles.content}>
@@ -263,7 +262,7 @@ const Screen = () => {
               color={Colors.black}
               style={styles.userNumIcon}
             />
-            <Text style={styles.userNumText}>참가인원</Text>
+            <Text style={styles.userNumText}>Participants</Text>
           </View>
           <View style={[styles.label, { justifyContent: "space-between" }]}>
             {userNums.map((userNum, idx) => (
@@ -301,7 +300,7 @@ const Screen = () => {
               color={Colors.black}
               style={styles.userNumIcon}
             />
-            <Text style={styles.userNumText}>예약시간</Text>
+            <Text style={styles.userNumText}>Screen</Text>
           </View>
           <View style={[styles.label, { justifyContent: "space-between" }]}>
             {screens &&
@@ -342,10 +341,20 @@ const Screen = () => {
                 </TouchableOpacity>
               ))}
           </View>
+
+          <View style={styles.label}>
+            <Ionicons
+              name="timer-outline"
+              size={24}
+              color={Colors.black}
+              style={styles.userNumIcon}
+            />
+            <Text style={styles.userNumText}>Booking Time</Text>
+          </View>
           <View style={{ alignItems: "flex-start", marginTop: 30 }}>
             {bookings.map((booking) => (
               <View key={booking.booking_id}>
-                <Text>{`${booking.start_tm} ~ ${booking.end_tm} 이용 불가`}</Text>
+                <Text>{`${booking.start_tm} ~ ${booking.end_tm} Not available`}</Text>
               </View>
             ))}
           </View>
@@ -358,14 +367,14 @@ const Screen = () => {
             }}
           >
             <Text style={{ color: Colors.light.tint }}>
-              참가인원, 시작시간을 선택하세요.
+              Select Participants, Booking Time.
             </Text>
             <Text style={{ color: Colors.light.tint }}>
-              종료시간은 자동으로 계산됩니다.
+              The end time is automatically calculated.
             </Text>
           </View>
           <View style={[styles.label, { justifyContent: "space-between" }]}>
-            <Text style={{ width: "18%" }}>시작시간: </Text>
+            <Text style={{ width: "22%" }}>Start Time: </Text>
             <TouchableOpacity style={styles.time} onPress={toggleTimePicker}>
               <Text style={{ textAlign: "center" }}>{startTime}</Text>
               <DateTimePickerModal
@@ -399,13 +408,13 @@ const Screen = () => {
               />
             </TouchableOpacity>
             <View style={{ width: 10 }} />
-            <Text style={{ width: "18%" }}>종료시간: </Text>
+            <Text style={{ width: "22%" }}>End Time: </Text>
             <View style={styles.time}>
               <Text style={{ textAlign: "center" }}>{endTime}</Text>
             </View>
           </View>
           <View style={{ marginTop: 30 }} />
-          <CustomButton text="예약" onPress={onScreenBook} />
+          <CustomButton text="Booking" onPress={onScreenBook} />
         </View>
       )}
       {(loading || screenLoading) && <LoadingIndicator />}
@@ -454,7 +463,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     justifyContent: "center",
-    width: "30%",
+    width: "25%",
     height: 30,
   },
   empty: {

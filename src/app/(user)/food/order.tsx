@@ -111,7 +111,7 @@ const Order = () => {
 
   const onPlus = (menu: Menu) => {
     if (!menu.is_stock) {
-      Alert.alert("주문하실 수 없습니다. 카운터에 문의하세요.");
+      Alert.alert("You cannot place an order. Please inquire at the counter.");
       return;
     }
 
@@ -160,7 +160,7 @@ const Order = () => {
             <Text>({menu.eng_nm})</Text>
             {!menu.is_stock && (
               <Text style={{ color: Colors.red, fontWeight: "bold" }}>
-                {` - 매진`}
+                {` - Sold Out`}
               </Text>
             )}
           </Text>
@@ -186,24 +186,24 @@ const Order = () => {
 
   const onOrderClick = async () => {
     if (!baskets || baskets.length === 0) {
-      Alert.alert("주문하실 메뉴를 선택하세요.");
+      Alert.alert("Please select the menu items you'd like to order.");
       return;
     }
 
     if (!facility) {
-      Alert.alert("장소를 선택하세요.");
+      Alert.alert("Please select a location.");
       return;
     }
 
     if (!pmtMthd) {
-      Alert.alert("결재방식을 선택하세요.");
+      Alert.alert("Please choose a payment method.");
       return;
     }
 
     if (
       !(await confirm(
-        "주문",
-        `₹ ${totalPrice} / ${facility.display_name} / ${pmtMthd}\n주문하시겠습니까?`
+        "Order",
+        `₹ ${totalPrice} / ${facility.display_name} / ${pmtMthd}\Would you like to place your order?`
       ))
     ) {
       return;
@@ -249,7 +249,7 @@ const Order = () => {
               "The user ordered the food.",
               "myapp://admin/status/order"
             );
-            Alert.alert("주문 요청 되었습니다.");
+            Alert.alert("Your order has been requested.");
             router.push("/(user)/");
           },
         }
@@ -259,7 +259,7 @@ const Order = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader headerTtitle="음료 & 스낵 주문" />
+      <CustomHeader headerTtitle="Beverages & Snacks" />
       <FlatList
         keyboardShouldPersistTaps={"handled"}
         style={{ width: "100%" }}
@@ -276,7 +276,7 @@ const Order = () => {
         )}
       />
       <View style={[styles.rowContainer, { marginBottom: 10 }]}>
-        <Text style={{ width: "35%" }}>장소: </Text>
+        <Text style={{ width: "35%" }}>Location: </Text>
         <SelectDropdown
           data={facilities}
           onSelect={(item) => setFacility(item.facility)}
@@ -331,7 +331,7 @@ const Order = () => {
         />
       </View>
       <View style={styles.rowContainer}>
-        <Text style={{ width: "35%" }}>결재 방식: </Text>
+        <Text style={{ width: "35%" }}>Pay method: </Text>
         <SelectDropdown
           data={pmtMthds}
           onSelect={(item) => setPmtMthd(item.title)}
@@ -385,7 +385,10 @@ const Order = () => {
           dropdownStyle={{ borderRadius: 8 }}
         />
       </View>
-      <CustomButton text={`주문 (₹ ${totalPrice})`} onPress={onOrderClick} />
+      <CustomButton
+        text={`Place order (₹ ${totalPrice})`}
+        onPress={onOrderClick}
+      />
       {(loading || isLoading) && <LoadingIndicator />}
     </View>
   );

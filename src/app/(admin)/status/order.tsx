@@ -126,14 +126,14 @@ const OrderStatus = () => {
 
       const body =
         updatedOrder.status === "PREPARING"
-          ? "고객님의 주문이 준비중입니다."
+          ? "Your order is being prepared."
           : updatedOrder.status === "COMPLETED(NOT PAID)"
-          ? "고객님의 주문이 완료되었습니다.\n결재를 부탁드립니다."
+          ? "Your order is complete.\nPlease proceed with payment."
           : updatedOrder.status === "COMPLETED"
-          ? "고객님의 주문이 완료되었습니다."
-          : "고객님의 주문이 취소되었습니다.\n카운터에 문의해주세요.";
+          ? "Your order has been completed."
+          : "Your order has been cancelled.\nPlease inquire at the counter.";
       sendPushNotificationToUser(
-        "주문",
+        "Order",
         body,
         "myapp://user/food/orderStatus",
         updatedOrder.user_id

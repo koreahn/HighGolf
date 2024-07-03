@@ -165,7 +165,7 @@ const Practice = () => {
         },
         {
           onSuccess: () => {
-            Alert.alert("The reservation has been made.");
+            Alert.alert("It has been booked.");
           },
         }
       );

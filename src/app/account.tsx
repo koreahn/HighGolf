@@ -50,8 +50,7 @@ export default function Account() {
         {
           onSuccess: () => {
             fetchUser();
-            Alert.alert("수정 되었습니다..");
-            router.push("/(user)/");
+            Alert.alert("Profile has been changed.");
           },
         }
       );
@@ -64,38 +63,39 @@ export default function Account() {
 
   return (
     <View style={styles.container}>
-      <CustomHeader headerTtitle="개인정보 수정" />
+      <CustomHeader headerTtitle="Edit Profile" />
       <ScrollView>
         <CustomInputA
           name="user_name"
           placeholder="Enter Name"
-          label="이름"
+          label="Name"
           control={control}
           rules={{
             required: "Name is required.",
           }}
         />
-        <CustomInputB label="전화번호" value={user?.contact} />
+        <CustomInputB label="Phone" value={user?.contact} />
         {user?.mbr_desc && user.mbr_desc !== "" && (
           <>
-            <CustomInputB label="멤버쉽" value={user?.mbr_desc} />
+            <CustomInputB label="Membership" value={user?.mbr_name} />
             <CustomInputB
-              label="멤버쉽 상태"
+              label="Status"
               value={
-                user.status === "WAITING"
-                  ? "승인대기 중"
-                  : user.status === "FINISH"
-                  ? "종료"
-                  : user.status === "STOPPED"
-                  ? "중지"
-                  : "정상"
+                user.status
+                // user.status === "WAITING"
+                //   ? "승인대기 중"
+                //   : user.status === "FINISH"
+                //   ? "종료"
+                //   : user.status === "STOPPED"
+                //   ? "중지"
+                //   : "정상"
               }
             />
           </>
         )}
       </ScrollView>
       <View>
-        <CustomButton text="저장" onPress={handleSubmit(onSaveClick)} />
+        <CustomButton text="Save" onPress={handleSubmit(onSaveClick)} />
       </View>
       <TouchableOpacity
         style={{ marginBottom: 30, marginTop: 20, justifyContent: "center" }}

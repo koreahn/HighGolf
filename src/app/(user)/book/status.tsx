@@ -38,33 +38,41 @@ const BookingStatus = () => {
   const { mutate: updateBook } = useUpdateBooking();
 
   const onCancelClick = async (booking: Booking) => {
-    const currentDate = new Date();
-    const bookingDate = new Date(
-      `${booking.booking_dt}T${booking.start_tm}:00`
-    );
+    try {
+      setLoading(true);
 
-    if (bookingDate < currentDate) {
-      Alert.alert("Cannot cancel", "Previous bookings cannot be canceled.");
-      return;
-    }
-
-    if (await confirm("Cancel", `Would you like to cancel the booking?`)) {
-      updateBook(
-        {
-          id: booking.booking_id,
-          updatedFields: {
-            status: "CANCELED",
-            booking_dt: booking.booking_dt,
-            description: "User canceled",
-            user_id: booking.user_id,
-          },
-        },
-        {
-          onSuccess: () => {
-            Alert.alert(`The booking has been canceled.`);
-          },
-        }
+      const currentDate = new Date();
+      const bookingDate = new Date(
+        `${booking.booking_dt}T${booking.start_tm}:00`
       );
+
+      if (bookingDate < currentDate) {
+        Alert.alert("Cannot cancel", "Previous bookings cannot be canceled.");
+        return;
+      }
+
+      if (await confirm("Cancel", `Would you like to cancel the booking?`)) {
+        updateBook(
+          {
+            id: booking.booking_id,
+            updatedFields: {
+              status: "CANCELED",
+              booking_dt: booking.booking_dt,
+              description: "User canceled",
+              user_id: booking.user_id,
+            },
+          },
+          {
+            onSuccess: () => {
+              Alert.alert(`The booking has been canceled.`);
+            },
+          }
+        );
+      }
+    } catch (err) {
+      console.error("Error booking Cancel:", err);
+    } finally {
+      setLoading(false);
     }
   };
 

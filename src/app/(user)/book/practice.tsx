@@ -60,15 +60,11 @@ const Practice = () => {
   } = useBookingList("practice", selectedDate);
 
   const generateTimeSlots = (
-    // hour: number,
-    // minute: number,
-    // endHour: number,
     startTime: string,
     endTime: string,
     bayId: number
   ): TimeSlot[] => {
     const timeSlots: TimeSlot[] = [];
-    // const stdHour = minute === 0 ? 21 : 22;
     let [hour, minute] = startTime.split(":").map(Number);
     const [endHour, endMinute] = endTime.split(":").map(Number);
     const stdHour = minute === 0 ? endHour - 2 : endHour - 1;
@@ -131,7 +127,7 @@ const Practice = () => {
   };
 
   const strMaxCnt =
-    getCodeByGroupAndCode("STD_TIME", "ODD_BAY_START_TIME") || "4";
+    getCodeByGroupAndCode("STC_CNT", "PRACTICE_CNT_FOR_DAY") || "4";
   const maxCnt = parseInt(strMaxCnt);
 
   const onTimeClick = async (timeSlot: TimeSlot, bay: Facility) => {
@@ -142,21 +138,27 @@ const Practice = () => {
 
     if (todayCnt >= maxCnt) {
       Alert.alert(
-        `하루 최대 ${maxCnt} 타임 예약 가능합니다.\n금일 예약 건수: ${todayCnt}`
+        "Practice",
+        `Maximum of ${maxCnt} time slots can be booked per day.\n\nNumber of bookings today: ${todayCnt}`
       );
+      return;
+    }
+
+    const [sTime, eTime] = timeSlot.time.split("~");
+    if (await checkContinuous(sTime, eTime, bay.facility_id)) {
+      Alert.alert("Practice", `You can't make a booking for consecutive hours`);
       return;
     }
 
     if (
       !(await confirm(
-        "연습예약",
-        `${selectedDate} ${timeSlot.time}\n${user?.user_name} 님으로 예약하시겠습니까?`
+        "Book Practice",
+        `${selectedDate} ${timeSlot.time}\n\nWould you like to book under the name ${user?.user_name}?`
       ))
     ) {
       return;
     }
 
-    const [sTime, eTime] = timeSlot.time.split("~");
     try {
       setLoading(true);
       insertBook(
@@ -174,7 +176,7 @@ const Practice = () => {
         },
         {
           onSuccess: () => {
-            Alert.alert("예약되었습니다.");
+            Alert.alert("It has been booked.");
           },
         }
       );
@@ -208,9 +210,43 @@ const Practice = () => {
     }
   };
 
+  const checkContinuous = async (
+    sTime: string,
+    eTime: string,
+    facility_id: number
+  ) => {
+    try {
+      setLoading(true);
+
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("booking_status")
+        .select("*")
+        .eq("booking_dt", selectedDate)
+        .eq("status", "BOOKED")
+        .eq("booking_type", "practice")
+        .eq("user_id", user.user_id)
+        .eq("facility_id", facility_id)
+        .or(`end_tm.eq.${sTime},start_tm.eq.${eTime}`);
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (data && data.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.error("Error booking practice checkContinuous:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <CustomHeader headerTtitle="연습 예약" />
+      <CustomHeader headerTtitle="Practice" />
       <DatePicker
         selectedDate={selectedDate}
         currIndex={currIndex}
@@ -230,8 +266,8 @@ const Practice = () => {
               }}
             >
               <View style={{ flexDirection: "row", gap: 10 }}>
-                <Text style={styles.possible}>예약가능</Text>
-                <Text style={styles.impossible}>예약불가</Text>
+                <Text style={styles.possible}>Available</Text>
+                <Text style={styles.impossible}>Unavailable</Text>
               </View>
             </View>
           </View>
@@ -287,8 +323,10 @@ const Practice = () => {
           })
         ) : (
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>이용 가능 시간이 아닙니다.</Text>
-            <Text style={styles.emptyText}>다른 날짜를 선택하세요.</Text>
+            <Text style={styles.emptyText}>
+              Not available during this time.
+            </Text>
+            <Text style={styles.emptyText}>Please choose another date.</Text>
           </View>
         )}
       </ScrollView>

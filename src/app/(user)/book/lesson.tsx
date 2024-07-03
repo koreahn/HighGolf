@@ -49,10 +49,6 @@ const Lesson = () => {
     isLoading: bayLoading,
   } = useFacilityTypeList("Lesson");
 
-  // const startTime = "09:00";
-  // const endTime = "21:00";
-  // const timeInterval = 60;
-
   useEffect(() => {
     const stdDates = getDates();
     setDates(stdDates);
@@ -94,7 +90,6 @@ const Lesson = () => {
         `${selectedDate}T${currentHour}:${currentMinutes}:00`
       );
 
-      // startDate = new Date(`${selectedDate}T${currentHour}:00:00`);
       startDate =
         currentDateTime > startTimeDate ? currentDateTime : startTimeDate;
     } else {
@@ -124,7 +119,6 @@ const Lesson = () => {
 
       timeSlots.push(timeSlot);
       currentTime.setMinutes(currentTime.getMinutes() + timeInterval);
-      // currentTime.setMinutes(currentTime.getMinutes() + timeInterval);
     }
 
     setTimeSlots(timeSlots);
@@ -132,14 +126,16 @@ const Lesson = () => {
 
   const onTimeClick = async (timeSlot: TimeSlot) => {
     if (!bays || bays.length <= 0) {
-      Alert.alert("연습장 사정 상 현재는 레슨 예약을 하실 수 없습니다.");
+      Alert.alert(
+        "Due to driving range circumstances, lesson bookings are not available at this time."
+      );
       return;
     }
     if (timeSlot.selected) return;
     if (
       !(await confirm(
-        "레슨예약",
-        `${selectedDate} ${timeSlot.time}\n${user?.user_name} 님으로 예약하시겠습니까?`
+        "Book Lesson",
+        `${selectedDate} ${timeSlot.time}\n\nWould you like to book under the name ${user?.user_name}?`
       ))
     ) {
       return;
@@ -165,7 +161,6 @@ const Lesson = () => {
         {
           onSuccess: (newBooking) => {
             regApproval(newBooking);
-            // Alert.alert("예약되었습니다.");
           },
         }
       );
@@ -196,12 +191,12 @@ const Lesson = () => {
         {
           onSuccess: () => {
             Alert.alert(
-              "예약되었습니다. 연습장에서 확인 후 예약이 확정됩니다."
+              "It has been booked. It will be confirmed after verification by the driving range."
             );
 
             sendPushNotificationToUser(
-              "Lesson reservation",
-              "Lesson reservation has been requested.",
+              "Book Lesson",
+              "Lesson booking has been requested.",
               "myapp://admin/manage/approvals"
             );
 
@@ -218,7 +213,7 @@ const Lesson = () => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader headerTtitle="골프레슨 예약" />
+      <CustomHeader headerTtitle="Golf Lesson" />
       <DatePicker
         selectedDate={selectedDate}
         currIndex={currIndex}
@@ -235,8 +230,8 @@ const Lesson = () => {
           }}
         >
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <Text style={styles.possible}>예약가능</Text>
-            <Text style={styles.impossible}>예약불가</Text>
+            <Text style={styles.possible}>Available</Text>
+            <Text style={styles.impossible}>Unavailable</Text>
           </View>
         </View>
       </View>
@@ -258,14 +253,16 @@ const Lesson = () => {
                     ? ""
                     : timeSlot.status === ""
                     ? ""
-                    : "(승인대기중)"
+                    : "(WAITING)"
                 }`}</Text>
               </TouchableOpacity>
             ))
           ) : (
             <View style={styles.empty}>
-              <Text style={styles.emptyText}>이용 가능 시간이 아닙니다.</Text>
-              <Text style={styles.emptyText}>다른 날짜를 선택하세요.</Text>
+              <Text style={styles.emptyText}>
+                Not available during this time.
+              </Text>
+              <Text style={styles.emptyText}>Please choose another date.</Text>
             </View>
           )}
         </View>

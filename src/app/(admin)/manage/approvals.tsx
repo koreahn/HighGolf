@@ -113,16 +113,16 @@ const Approvals = () => {
                 : "Lesson";
             const body =
               appr.appr_type === "stop" && type === "approve"
-                ? "요청하신 멤버쉽 중지 신청이 처리되었습니다."
+                ? "Your request to pause your membership has been processed."
                 : appr.appr_type === "stop" && type === "reject"
-                ? "멤버쉽 중지 신청이 거절 되었습니다.\n연습장에 문의해주세요."
+                ? "Your request to pause your membership has been denied.\nPlease contact the driving range."
                 : appr.appr_type === "start" && type === "approve"
-                ? "요청하신 멤버쉽 재시작 신청이 처리되었습니다."
+                ? "Your request to restart your membership has been processed."
                 : appr.appr_type === "start" && type === "reject"
-                ? "멤버쉽 재시작 신청이 거절 되었습니다.\n연습장에 문의해주세요."
+                ? "Your request to restart your membership has been denied.\nPlease contact the driving range."
                 : appr.appr_type === "lesson" && type === "approve"
-                ? "요청하신 레슨이 처리되었습니다."
-                : "요청하신 레슨이 거절 되었습니다.\n연습장에 문의해주세요.";
+                ? "Your requested lesson has been booked."
+                : "Your requested lesson has been denied.\nPlease contact the driving range.";
             const url =
               appr.appr_type === "lesson"
                 ? "myapp://user/book/lesson"

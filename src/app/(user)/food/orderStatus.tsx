@@ -100,34 +100,6 @@ const OrderStatus = () => {
     }
   };
 
-  const onChangeStatus = async (status: { title: string }, order: Order) => {
-    if (status.title === order.status) return;
-    const title = status.title;
-    const message = `Would you like to change the order status to ${status.title}?`;
-    if (!(await confirm(title, message))) return order.status;
-
-    try {
-      setLoading(true);
-      const { error, data: updatedOrder } = await supabase
-        .from("orders")
-        .update({
-          status: status.title,
-        })
-        .eq("order_id", order.order_id)
-        .select()
-        .single();
-
-      if (error) {
-        throw new Error(error.message);
-      }
-      Alert.alert("Order status has been changed.");
-    } catch (err) {
-      console.error("Error changing order status:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const rederOrders: ListRenderItem<OrderWithBaskets> = ({ item }) => {
     return (
       <View
@@ -142,13 +114,7 @@ const OrderStatus = () => {
           },
         ]}
       >
-        <View style={styles.rowContainer}>
-          {/* <Text style={{ fontSize: 14, fontWeight: "600" }}>
-            {item.order.display_name
-              ? `${item.order.display_name} (${item.order.user_name})`
-              : item.order.user_name}
-          </Text> */}
-        </View>
+        <View style={styles.rowContainer}></View>
         <View
           style={[styles.rowContainer, { justifyContent: "space-between" }]}
         >
@@ -187,63 +153,6 @@ const OrderStatus = () => {
             {item.order.status}
           </Text>
         </View>
-
-        {/* <SelectDropdown
-          data={[
-            { title: "ORDERED" },
-            { title: "PREPARING" },
-            { title: "COMPLETED(NOT PAID)" },
-            { title: "COMPLETED" },
-            { title: "CANCELED" },
-          ]}
-          onSelect={(status) => onChangeStatus(status, item.order)}
-          disabled={
-            item.order.status === "COMPLETED" ||
-            item.order.status === "CANCELED"
-          }
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderColor: Colors.light.tint,
-                  backgroundColor: Colors.light.tint,
-                  borderWidth: 1,
-                  height: 25,
-                  borderRadius: 5,
-                }}
-              >
-                <Text style={{ color: Colors.white }}>
-                  {selectedItem ? selectedItem.title : item.order.status}
-                </Text>
-                {item.order.status !== "COMPLETED" &&
-                  item.order.status !== "CANCELED" && (
-                    <AntDesign
-                      name={isOpened ? "up" : "down"}
-                      size={18}
-                      color={Colors.white}
-                    />
-                  )}
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View
-                style={{
-                  ...styles.dropdownItemStyle,
-                  ...(isSelected && { backgroundColor: "#D2D9DF" }),
-                }}
-              >
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-        /> */}
       </View>
     );
   };

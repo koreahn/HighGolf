@@ -10,13 +10,15 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {
-      "android": {
-        "buildType": "apk"
-      }
-    }
+    "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "highgolf2023@gmail.com",
+        "ascAppId": "6526481525",
+        "appleTeamId": "8KYSA6ZLAX"
+      }
+    }
   }
 }

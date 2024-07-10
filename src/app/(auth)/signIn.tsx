@@ -101,7 +101,7 @@ const SignIn = () => {
     const currentPhone = getValues("phone");
     const phonePattern = /^[6-9]{1}[0-9]{9}$/;
     if (!currentPhone || !phonePattern.test(currentPhone)) {
-      Alert.alert("Phone Number", "전화번호 형식이 올바르지 않습니다");
+      Alert.alert("Phone Number", "The phone number format is incorrect.");
       return;
     }
 
@@ -115,13 +115,13 @@ const SignIn = () => {
           console.error("err", error);
           Alert.alert(error.message);
         } else {
-          Alert.alert("새 OTP가 발송되었습니다.");
+          Alert.alert("A new OTP has been sent.");
         }
       } catch (err) {
         console.error("Error onResendOtp:", err);
       }
     } else {
-      Alert.alert("전화번호를 입력하세요.");
+      Alert.alert("Please enter your phone number.");
     }
   };
 
@@ -142,14 +142,14 @@ const SignIn = () => {
       <View style={styles.contents}>
         <CustomPhoneInput
           name="phone"
-          placeholder="전화번호를 입력하세요."
+          placeholder="Please enter your phone number."
           label="Phone Number"
           control={control}
           rules={{
-            required: "전화번호는 필수 항목입니다.",
+            required: "The phone number is required.",
             pattern: {
               value: /^[6-9]{1}[0-9]{9}$/,
-              message: "전화번호 형식이 올바르지 않습니다",
+              message: "The phone number format is incorrect.",
             },
           }}
           inputMode="numeric"
@@ -157,14 +157,14 @@ const SignIn = () => {
         {ready && (
           <CustomInput
             name="otp"
-            placeholder="OTP 를 입력하세요."
+            placeholder="Please enter your OTP."
             label="OTP"
             control={control}
             rules={{
-              required: "OTP 는 필수 항목입니다.",
+              required: "The OTP is required.",
               pattern: {
                 value: /^[0-9]{6}$/,
-                message: "6자리 숫자를 입력하세요.",
+                message: "Please enter a 6-digit number.",
               },
             }}
             inputMode="numeric"

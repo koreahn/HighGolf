@@ -90,7 +90,7 @@ const getUserToken = async (user_id: number) => {
 
     return data?.token ?? null;
   } catch (err) {
-    console.error("Error savePushToken:", err);
+    console.error("Error getUserToken:", err);
     return null;
   }
 };
@@ -109,7 +109,7 @@ const getTokens = async () => {
 
     return data || [];
   } catch (err) {
-    console.error("Error savePushToken:", err);
+    console.error("Error getTokens:", err);
     return [];
   }
 };
